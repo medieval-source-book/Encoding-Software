@@ -24,7 +24,8 @@
 # # # ---> python prosetwo.py transc.txt transl.txt output.xml
 # 
 # Additional Specs: (VERY IMPORTANT THAT THESE ARE FOLLOWED ... TO A "T"!)
-# Use UTF-16 for conversion to .txt files
+# Use UTF-8 for conversion to .txt files
+# The should also be saved with the option "LF only" for new lines
 # You can drag the files into your terminal window to get their full path!
 # Lines should be matching and separated by a new line
 # This program will break the text into sentence pieces
@@ -42,8 +43,8 @@ def transcribe(transcription, translation, output):
 			with open(translation, 'r') as transl:
 
 				paragraph = 1
-				transcLines = transc.read().decode('utf-16').split("\n")
-				translLines = transl.read().decode('utf-16').split("\n")
+				transcLines = transc.read().decode('utf-8').split("\n")
+				translLines = transl.read().decode('utf-8').split("\n")
 
 				for i in range(len(transcLines) - 1):
 
@@ -52,11 +53,11 @@ def transcribe(transcription, translation, output):
 						paragraph += 1
 						out.write("\n</p>\n<p n=\"%d\">" % paragraph)
 					else:
-						#Take off the final "\n" character
-						transcLines[i] = transcLines[i][:len(transcLines[i])-1]
-						translLines[i] = translLines[i][:len(translLines[i])-1]
+						#Take off the final "\n" character and any additional whitespace
+						transcLines[i] = transcLines[i].strip()
+						translLines[i] = translLines[i].strip()
 
-						out.write("\n<s>\n<app>\n<lem wit=\"#Transcription\">%s</lem>\n<rdg wit=\"#Translation\">%s</rdg>\n</app>\n</s>\n" % (transcLines[i], translLines[i]))
+						out.write("\n<s>\n<app>\n<lem wit=\"#Transcription\">%s</lem>\n<rdg wit=\"#Translation\">%s</rdg>\n</app>\n</s>\n" % (transcLines[i].encode('utf-8'), translLines[i].encode('utf-8')))
 
 		footer = "\n</p>\n</div>\n</body>\n</text>\n</TEI>"
 		out.write(footer)

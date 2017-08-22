@@ -20,7 +20,8 @@
 # This is the beginning of a new paragraph
 #
 # Additional Specs: (VERY IMPORTANT THAT THESE ARE FOLLOWED ... TO A "T"!)
-# Use UTF-16 for conversion to .txt files
+# Use UTF-8 for conversion to .txt files
+# The should also be saved with the option "LF only" for new lines
 # You can drag the files into your terminal window to get their full path!
 # IN THE EVENT OF A PARAGRAPH CHANGE: Include a blank line!
 # Make sure that there are no spaces or new lines at the end of the document (your cursor should be immediately after the last letter at furthest)
@@ -36,7 +37,7 @@ def transcribe(text, output):
 
 			even = True
 			paragraph = 1
-			textLines = textFile.read().decode('utf-16').split("\n")
+			textLines = textFile.read().decode('utf-8').split("\n")
 
 			for i in range(len(textLines) - 1):
 				if even and i % 2 != 0:
@@ -50,10 +51,10 @@ def transcribe(text, output):
 					out.write("\n</p>\n<p n=\"%d\">" % paragraph)
 					even = not even
 				else:
-					#Take off the final "\n" character
-					textLines[i] = textLines[i][:len(textLines[i])-1]
-					textLines[i+1] = textLines[i+1][:len(textLines[i+1])-1]
-					out.write("\n<s>\n<app>\n<lem wit=\"#Transcription\">%s</lem>\n<rdg wit=\"#Translation\">%s</rdg>\n</app>\n</s>" % (textLines[i], textLines[i+1]))
+					#Take off the final "\n" character and any additional whitespace
+					textLines[i] = textLines[i].strip()
+					textLines[i+1] = textLines[i+1].strip()
+					out.write("\n<s>\n<app>\n<lem wit=\"#Transcription\">%s</lem>\n<rdg wit=\"#Translation\">%s</rdg>\n</app>\n</s>" % (textLines[i].encode('utf-8'), textLines[i+1].encode('utf-8')))
 
 		footer = "\n</p>\n</div>\n</body>\n</text>\n</TEI>"
 		out.write(footer)
