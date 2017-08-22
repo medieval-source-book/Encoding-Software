@@ -32,13 +32,12 @@ def transcribe(transcription, output):
 		out.write(header)
 
 		with open(transcription, 'r') as transc:
-
 			line = 1
 			transcLines = transc.read().decode('utf-8').split("\n")
 
 			for i in range(len(transcLines) - 1):
 
-				if len(transcLines[i]) == 1:
+				if len(transcLines[i]) == 0:
 					# Stanza break
 					out.write("<app>\n<lem wit=\"#Transcription\"><milestone unit=\"stanza\"/></lem>\n<rdg wit=\"#Translation\"><milestone unit=\"stanza\"/></rdg>\n</app>\n")
 				else:
